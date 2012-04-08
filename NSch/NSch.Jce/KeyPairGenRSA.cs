@@ -66,14 +66,14 @@ namespace NSch.Jce
 			Sharpen.KeyPair pair = keyGen.GenerateKeyPair();
 			PublicKey pubKey = pair.GetPublic();
 			PrivateKey prvKey = pair.GetPrivate();
-			d = ((RSAPrivateKey)prvKey).GetPrivateExponent().GetBytes();
-			e = ((RSAPublicKey)pubKey).GetPublicExponent().GetBytes();
-			n = ((RSAPrivateKey)prvKey).GetModulus().GetBytes();
-			c = ((RSAPrivateCrtKey)prvKey).GetCrtCoefficient().GetBytes();
-			ep = ((RSAPrivateCrtKey)prvKey).GetPrimeExponentP().GetBytes();
-			eq = ((RSAPrivateCrtKey)prvKey).GetPrimeExponentQ().GetBytes();
-			p = ((RSAPrivateCrtKey)prvKey).GetPrimeP().GetBytes();
-			q = ((RSAPrivateCrtKey)prvKey).GetPrimeQ().GetBytes();
+            d = ((RSAPrivateKey)prvKey).GetPrivateExponent().ToByteArray();
+            e = ((RSAPublicKey)pubKey).GetPublicExponent().ToByteArray();
+            n = ((RSAPrivateKey)prvKey).GetModulus().ToByteArray();
+            c = ((RSAPrivateCrtKey)prvKey).GetCrtCoefficient().ToByteArray();
+            ep = ((RSAPrivateCrtKey)prvKey).GetPrimeExponentP().ToByteArray();
+            eq = ((RSAPrivateCrtKey)prvKey).GetPrimeExponentQ().ToByteArray();
+            p = ((RSAPrivateCrtKey)prvKey).GetPrimeP().ToByteArray();
+            q = ((RSAPrivateCrtKey)prvKey).GetPrimeQ().ToByteArray();
 		}
 
 		public virtual byte[] GetD()

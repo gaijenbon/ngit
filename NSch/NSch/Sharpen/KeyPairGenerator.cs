@@ -26,8 +26,8 @@
 
 using System;
 using System.Security.Cryptography;
-using Mono.Security.Cryptography;
-using Mono.Math;
+//using Mono.Security.Cryptography;
+using System.Numerics;
 
 namespace Sharpen
 {
@@ -40,9 +40,9 @@ namespace Sharpen
 		public static KeyPairGenerator GetInstance (string name)
 		{
 			switch (name.ToUpper ()) {
-			case "DH": return new DHKeyPairGenerator ();
-			case "DSA": return new DSAKeyPairGenerator ();
-			case "RSA": return new RSAKeyPairGenerator ();
+                case "DH": throw new NotSupportedException();
+			    case "DSA": return new DSAKeyPairGenerator ();
+			    case "RSA": return new RSAKeyPairGenerator ();
 			}
 			throw new NotSupportedException ();
 		}
@@ -98,22 +98,22 @@ namespace Sharpen
 		}
 	}
 	
-	class DHKeyPairGenerator: KeyPairGenerator
-	{
-		DHParameterSpec pspec;
+    //class DHKeyPairGenerator: KeyPairGenerator
+    //{
+    //    DHParameterSpec pspec;
 		
-		public override void Initialize (AlgorithmParameterSpec pars)
-		{
-			pspec = (DHParameterSpec) pars;
-		}
+    //    public override void Initialize (AlgorithmParameterSpec pars)
+    //    {
+    //        pspec = (DHParameterSpec) pars;
+    //    }
 		
-		public override KeyPair GenerateKeyPair ()
-		{
-			DiffieHellmanManaged dh = new DiffieHellmanManaged (pspec.P.GetBytes (), pspec.G.GetBytes (), 0);
-			DHParameters dhpars = dh.ExportParameters (true);
-			BigInteger y = new BigInteger (dh.CreateKeyExchange ());
-			return new KeyPair (new DHPrivateKey (dhpars), new DHPublicKey (y));
-		}
-	}
+    //    public override KeyPair GenerateKeyPair ()
+    //    {
+    //        DiffieHellmanManaged dh = new DiffieHellmanManaged (pspec.P.GetBytes (), pspec.G.GetBytes (), 0);
+    //        DHParameters dhpars = dh.ExportParameters (true);
+    //        BigInteger y = new BigInteger (dh.CreateKeyExchange ());
+    //        return new KeyPair (new DHPrivateKey (dhpars), new DHPublicKey (y));
+    //    }
+    //}
 }
 

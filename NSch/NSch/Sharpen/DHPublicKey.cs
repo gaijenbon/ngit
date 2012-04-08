@@ -24,8 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using Mono.Math;
-using Mono.Security.Cryptography;
+using System.Numerics;
 
 namespace Sharpen
 {

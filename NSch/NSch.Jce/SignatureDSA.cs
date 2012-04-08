@@ -29,7 +29,7 @@ This code is based on jsch (http://www.jcraft.com/jsch).
 All credit should go to the authors of jsch.
 */
 
-using Mono.Math;
+using System.Numerics;
 using Sharpen;
 
 namespace NSch.Jce

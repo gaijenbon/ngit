@@ -4,8 +4,7 @@ namespace Sharpen
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Threading;
-	using Mono.Unix;
-
+	
 	public class FilePath
 	{
 		static bool RunningOnLinux = !Environment.OSVersion.Platform.ToString ().StartsWith ("Win");
@@ -56,12 +55,7 @@ namespace Sharpen
 		}
 
 		public bool CanWrite ()
-		{
-			if (RunningOnLinux) {
-				var info = Mono.Unix.UnixFileInfo.GetFileSystemEntry (path);
-				return info.CanAccess (Mono.Unix.Native.AccessModes.W_OK);
-			}
-			
+		{			
 			return ((File.GetAttributes (path) & FileAttributes.ReadOnly) == 0);
 		}
 
@@ -104,20 +98,6 @@ namespace Sharpen
 		public bool Delete ()
 		{
 			try {
-				if (RunningOnLinux) {
-					var info = UnixFileSystemInfo.GetFileSystemEntry (path);
-					if (info.Exists) {
-						try {
-							info.Delete ();
-							return true;
-						} catch {
-							// If the directory is not empty we return false. JGit relies on this
-							return false;
-						}
-					}
-					return false;
-				}
-
 				if (Directory.Exists (path)) {
 					if (Directory.GetFileSystemEntries (path).Length != 0)
 						return false;
@@ -143,9 +123,6 @@ namespace Sharpen
 
 		public bool Exists ()
 		{
-			if (RunningOnLinux)
-				return Mono.Unix.UnixFileInfo.GetFileSystemEntry (path).Exists;
-
 			return (File.Exists (path) || Directory.Exists (path));
 		}
 
@@ -193,53 +170,22 @@ namespace Sharpen
 
 		public bool IsDirectory ()
 		{
-			try {
-				if (RunningOnLinux) {
-					var info = Mono.Unix.UnixFileInfo.GetFileSystemEntry (path);
-					return info.Exists && info.FileType == FileTypes.Directory;
-				}
-			} catch (DirectoryNotFoundException) {
-				// If the file /foo/bar exists and we query to see if /foo/bar/baz exists, we get a
-				// DirectoryNotFound exception for Mono.Unix. In this case the directory definitely
-				// does not exist.
-				return false;
-			}
 			return Directory.Exists (path);
 		}
 
 		public bool IsFile ()
 		{
-			try {
-				if (RunningOnLinux) {
-					var info = Mono.Unix.UnixFileInfo.GetFileSystemEntry (path);
-					return info.Exists && (info.FileType == FileTypes.RegularFile || info.FileType == FileTypes.SymbolicLink);
-				}
-			} catch (DirectoryNotFoundException) {
-				// If we have a file /foo/bar and probe the path /foo/bar/baz, we get a DirectoryNotFound exception
-				// because 'bar' is a file and therefore 'baz' cannot possibly exist. This is annoying.
-				return false;
-			}
 			return File.Exists (path);
 		}
 
 		public long LastModified ()
 		{
-            if (RunningOnLinux) {
-                var info = UnixFileInfo.GetFileSystemEntry(path);
-                return info.Exists ? info.LastWriteTimeUtc.ToMillisecondsSinceEpoch() : 0;
-            }
-
             var info2 = new FileInfo(path);
 			return info2.Exists ? info2.LastWriteTimeUtc.ToMillisecondsSinceEpoch() : 0;
 		}
 
 		public long Length ()
 		{
-			if (RunningOnLinux) {
-				var info = UnixFileInfo.GetFileSystemEntry (path);
-				return info.Exists ? info.Length : 0;
-			}
-
 			// If you call .Length on a file that doesn't exist, an exception is thrown
 			var info2 = new FileInfo (path);
 			return info2.Exists ? info2.Length : 0;
@@ -295,12 +241,6 @@ namespace Sharpen
 
 		private void MakeFileWritable (string file)
 		{
-			if (RunningOnLinux) {
-				var info = UnixFileInfo.GetFileSystemEntry (file);
-				info.FileAccessPermissions |= (FileAccessPermissions.GroupWrite | FileAccessPermissions.OtherWrite | FileAccessPermissions.UserWrite);
-				return;
-			}
-
 			FileAttributes fileAttributes = File.GetAttributes (file);
 			if ((fileAttributes & FileAttributes.ReadOnly) != 0) {
 				fileAttributes &= ~FileAttributes.ReadOnly;
@@ -340,14 +280,6 @@ namespace Sharpen
 		public bool RenameTo (string name)
 		{
 			try {
-				if (RunningOnLinux) {
-					var symlink = UnixFileInfo.GetFileSystemEntry (path) as UnixSymbolicLinkInfo;
-					if (symlink != null) {
-						var newFile = new UnixSymbolicLinkInfo (name);
-						newFile.CreateSymbolicLinkTo (symlink.ContentsPath);
-					}
-				}
-
 				File.Move (path, name);
 				return true;
 			} catch {
@@ -364,12 +296,6 @@ namespace Sharpen
 
 		public void SetReadOnly ()
 		{
-			if (RunningOnLinux) {
-				var info = UnixFileInfo.GetFileSystemEntry (path);
-				info.FileAccessPermissions &= ~ (FileAccessPermissions.GroupWrite | FileAccessPermissions.OtherWrite | FileAccessPermissions.UserWrite);
-				return;
-			}
-
 			var fileAttributes = File.GetAttributes (this.path) | FileAttributes.ReadOnly;
 			File.SetAttributes (path, fileAttributes);
 		}
@@ -382,41 +308,12 @@ namespace Sharpen
 		// Don't change the case of this method, since ngit does reflection on it
 		public bool canExecute ()
 		{
-			if (RunningOnLinux) {
-				UnixFileInfo fi = new UnixFileInfo (path);
-				if (!fi.Exists)
-					return false;
-				return 0 != (fi.FileAccessPermissions & (FileAccessPermissions.UserExecute | FileAccessPermissions.GroupExecute | FileAccessPermissions.OtherExecute));
-			}
-
 			return false;
 		}
 		
 		// Don't change the case of this method, since ngit does reflection on it
 		public bool setExecutable (bool exec)
 		{
-			if (RunningOnLinux) {
-				UnixFileInfo fi = new UnixFileInfo (path);
-				FileAccessPermissions perms = fi.FileAccessPermissions;
-				if (exec) {
-					if (perms.HasFlag (FileAccessPermissions.UserRead))
-						perms |= FileAccessPermissions.UserExecute;
-					if (perms.HasFlag (FileAccessPermissions.OtherRead))
-						perms |= FileAccessPermissions.OtherExecute;
-					if ((perms.HasFlag (FileAccessPermissions.GroupRead)))
-						perms |= FileAccessPermissions.GroupExecute;
-				} else {
-					if (perms.HasFlag (FileAccessPermissions.UserRead))
-						perms &= ~FileAccessPermissions.UserExecute;
-					if (perms.HasFlag (FileAccessPermissions.OtherRead))
-						perms &= ~FileAccessPermissions.OtherExecute;
-					if ((perms.HasFlag (FileAccessPermissions.GroupRead)))
-						perms &= ~FileAccessPermissions.GroupExecute;
-				}
-				fi.FileAccessPermissions = perms;
-				return true;
-			}
-
 			return false;
 		}
 		

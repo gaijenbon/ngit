@@ -25,8 +25,8 @@
 // THE SOFTWARE.
 using System;
 using System.Security.Cryptography;
-using Mono.Security.Cryptography;
-using Mono.Math;
+//using Mono.Security.Cryptography;
+using System.Numerics;
 
 namespace Sharpen
 {
@@ -57,10 +57,10 @@ namespace Sharpen
 		{
 			DSAPublicKeySpec spec = (DSAPublicKeySpec) key;
 			DSAParameters dsp = new DSAParameters ();
-			dsp.G = spec.GetG ().GetBytes ();
-			dsp.P = spec.GetP ().GetBytes ();
-			dsp.Q = spec.GetQ ().GetBytes ();
-			dsp.Y = spec.GetY ().GetBytes ();
+			dsp.G = spec.GetG ().ToByteArray();
+            dsp.P = spec.GetP().ToByteArray();
+            dsp.Q = spec.GetQ().ToByteArray();
+            dsp.Y = spec.GetY().ToByteArray();
 			return new DSAPublicKey (dsp);
 		}
 		
@@ -68,10 +68,10 @@ namespace Sharpen
 		{
 			DSAPrivateKeySpec spec = (DSAPrivateKeySpec) key;
 			DSAParameters dsp = new DSAParameters ();
-			dsp.G = spec.GetG ().GetBytes ();
-			dsp.P = spec.GetP ().GetBytes ();
-			dsp.Q = spec.GetQ ().GetBytes ();
-			dsp.X = spec.GetX ().GetBytes ();
+            dsp.G = spec.GetG().ToByteArray();
+            dsp.P = spec.GetP().ToByteArray();
+            dsp.Q = spec.GetQ().ToByteArray();
+            dsp.X = spec.GetX().ToByteArray();
 			return new DSAPrivateKey (dsp);
 		}
 	}
@@ -96,8 +96,8 @@ namespace Sharpen
 		{
 			RSAPublicKeySpec spec = (RSAPublicKeySpec) key;
 			RSAParameters dparams = new RSAParameters ();
-			dparams.Modulus = spec.GetModulus ().GetBytes ();
-			dparams.Exponent = spec.GetPublicExponent ().GetBytes ();
+            dparams.Modulus = spec.GetModulus().ToByteArray();
+            dparams.Exponent = spec.GetPublicExponent().ToByteArray();
 			return new RSAPublicKey (dparams);
 		}
 		
@@ -105,9 +105,9 @@ namespace Sharpen
 		{
 			RSAPrivateKeySpec spec = (RSAPrivateKeySpec) key;
 			RSAParameters dparams = new RSAParameters ();
-			dparams.Modulus = spec.GetModulus ().GetBytes ();
-			dparams.D = spec.GetPrivateExponent ().GetBytes ();
-			dparams.Exponent = spec.GetPublicExponent ().GetBytes ();
+            dparams.Modulus = spec.GetModulus().ToByteArray();
+            dparams.D = spec.GetPrivateExponent().ToByteArray();
+            dparams.Exponent = spec.GetPublicExponent().ToByteArray();
 			return new RSAPrivateKey (dparams);
 		}
 	}

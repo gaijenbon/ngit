@@ -24,19 +24,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using Mono.Math;
-using Mono.Security.Cryptography;
+using System.Numerics;
+//using Mono.Security.Cryptography;
 
 namespace Sharpen
 {
 	public class DHPrivateKey: PrivateKey
 	{
-		public DHParameters Parameters { get; private set; }
+		//public DHParameters Parameters { get; private set; }
 		
-		public DHPrivateKey (DHParameters dhpars)
-		{
-			Parameters = dhpars;
-		}
+        //public DHPrivateKey (DHParameters dhpars)
+        //{
+        //    Parameters = dhpars;
+        //}
 	}
 }
 

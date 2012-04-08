@@ -24,7 +24,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using Mono.Security.Cryptography;
 using System.Security.Cryptography;
 
 namespace Sharpen
@@ -47,12 +46,12 @@ namespace Sharpen
 		public static Cipher GetInstance (string name)
 		{
 			switch (name) {
-			case "RC4": return new R4Cipher ();
-			case "AES/CBC/NoPadding": return new AesCipher (CipherMode.CBC);
-			case "AES/CTR/NoPadding": throw new NotSupportedException ();
-			case "Blowfish/CBC/NoPadding": return new BlowfishCipher (CipherMode.CBC);
-			case "DESede/CBC/NoPadding": return new DESedeCipher (CipherMode.CBC);
-			case "DESede/CTR/NoPadding": throw new NotSupportedException ();
+                case "RC4": throw new NotSupportedException();
+			    case "AES/CBC/NoPadding": return new AesCipher (CipherMode.CBC);
+			    case "AES/CTR/NoPadding": throw new NotSupportedException ();
+			    case "Blowfish/CBC/NoPadding": return new BlowfishCipher (CipherMode.CBC);
+			    case "DESede/CBC/NoPadding": return new DESedeCipher (CipherMode.CBC);
+			    case "DESede/CTR/NoPadding": throw new NotSupportedException ();
 			}
 			throw new NotSupportedException ();
 		}
@@ -63,31 +62,7 @@ namespace Sharpen
 		}
 	}
 	
-	class R4Cipher: Cipher
-	{
-		RC4 rc4;
-		ICryptoTransform transformer;
 		
-		public R4Cipher()
-		{
-			rc4 = new ARC4Managed ();
-		}
-		
-		public override void Init (int mode, Key keyspec)
-		{
-			SecretKeySpec key = (SecretKeySpec)keyspec;
-			if (mode == Cipher.ENCRYPT_MODE)
-				transformer = rc4.CreateEncryptor (key.Key, new byte[0]);
-			else
-				transformer = rc4.CreateDecryptor (key.Key, new byte[0]);
-		}
-		
-		public override void Update (byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
-		{
-			transformer.TransformBlock (input, inputOffset, inputLen, output, outputOffset);
-		}
-	}
-	
 	class AesCipher: Cipher
 	{
 		Aes encryptor;

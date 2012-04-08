@@ -26,7 +26,7 @@
 using System;
 using System.Security.Cryptography;
 using System.IO;
-using Mono.Security.Cryptography;
+//using Mono.Security.Cryptography;
 
 namespace Sharpen
 {
@@ -58,17 +58,19 @@ namespace Sharpen
 	
 	class SHA1withRSASignature: Signature
 	{
-		RSAManaged rsa = new RSAManaged ();
+		//RSAManaged rsa = new RSAManaged ();
 		MemoryStream ms = new MemoryStream ();
 		
 		public override byte[] Sign ()
 		{
+            throw new NotImplementedException();
+
 			try {
 				ms.Position = 0;
 				HashAlgorithm hash = HashAlgorithm.Create ("SHA1");
 				byte[] toBeSigned = hash.ComputeHash (ms);
 				ms = new MemoryStream ();
-				return PKCS1.Sign_v15 (rsa, hash, toBeSigned);
+				//return PKCS1.Sign_v15 (rsa, hash, toBeSigned);
 				
 //				byte[] res = rsa.SignData (ms, "sha1");
 //				return res;
@@ -85,8 +87,10 @@ namespace Sharpen
 		
 		public override void InitSign (PrivateKey key)
 		{
+            throw new NotImplementedException();
+
 			try {
-				rsa.ImportParameters (((RSAPrivateKey)key).Parameters);
+				//rsa.ImportParameters (((RSAPrivateKey)key).Parameters);
 			} catch (Exception ex) {
 				Console.WriteLine (ex);
 				throw;
@@ -95,14 +99,18 @@ namespace Sharpen
 		
 		public override void InitVerify (PublicKey key)
 		{
-			rsa.ImportParameters (((RSAPublicKey)key).Parameters);
+            throw new NotImplementedException();
+
+			//rsa.ImportParameters (((RSAPublicKey)key).Parameters);
 		}
 		
 		public override bool Verify (byte[] signature)
-		{
+        {
+            throw new NotImplementedException();
+
 			HashAlgorithm hash = HashAlgorithm.Create ("SHA1");
 			byte[] toBeVerified = hash.ComputeHash (ms.ToArray ());
-			return PKCS1.Verify_v15 (rsa, hash, toBeVerified, signature);
+//			return PKCS1.Verify_v15 (rsa, hash, toBeVerified, signature);
 //			return rsa.VerifyData (ms.ToArray (), "SHA1", signature);
 		}
 		

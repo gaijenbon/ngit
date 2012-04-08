@@ -29,7 +29,7 @@ This code is based on jsch (http://www.jcraft.com/jsch).
 All credit should go to the authors of jsch.
 */
 
-using Mono.Math;
+using System.Numerics;
 using Sharpen;
 
 namespace NSch.Jce
@@ -78,7 +78,7 @@ namespace NSch.Jce
 				//    BigInteger x=((javax.crypto.interfaces.DHPrivateKey)(myKpair.getPrivate())).getX();
 				//byte[] myPubKeyEnc = myKpair.GetPublic().GetEncoded();
 				e = ((DHPublicKey)(myKpair.GetPublic())).GetY();
-				e_array = e.GetBytes();
+                e_array = e.ToByteArray();
 			}
 			return e_array;
 		}
@@ -94,7 +94,7 @@ namespace NSch.Jce
 				myKeyAgree.DoPhase(yourPubKey, true);
 				byte[] mySharedSecret = myKeyAgree.GenerateSecret();
 				K = new BigInteger(mySharedSecret);
-				K_array = K.GetBytes();
+                K_array = K.ToByteArray();
 				//System.err.println("K.signum(): "+K.signum()+
 				//		   " "+Integer.toHexString(mySharedSecret[0]&0xff)+
 				//		   " "+Integer.toHexString(K_array[0]&0xff));

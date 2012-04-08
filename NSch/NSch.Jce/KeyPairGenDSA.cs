@@ -55,12 +55,12 @@ namespace NSch.Jce
 			Sharpen.KeyPair pair = keyGen.GenerateKeyPair();
 			PublicKey pubKey = pair.GetPublic();
 			PrivateKey prvKey = pair.GetPrivate();
-			x = ((DSAPrivateKey)prvKey).GetX().GetBytes();
-			y = ((DSAPublicKey)pubKey).GetY().GetBytes();
+			x = ((DSAPrivateKey)prvKey).GetX().ToByteArray();
+            y = ((DSAPublicKey)pubKey).GetY().ToByteArray();
 			DSAParams @params = ((DSAKey)prvKey).GetParams();
-			p = @params.GetP().GetBytes();
-			q = @params.GetQ().GetBytes();
-			g = @params.GetG().GetBytes();
+            p = @params.GetP().ToByteArray();
+            q = @params.GetQ().ToByteArray();
+            g = @params.GetG().ToByteArray();
 		}
 
 		public virtual byte[] GetX()

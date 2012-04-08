@@ -24,7 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
-using Mono.Security.Cryptography;
+//using Mono.Security.Cryptography;
 
 namespace Sharpen
 {
@@ -46,27 +46,31 @@ namespace Sharpen
 	
 	class DHKeyAgreement: KeyAgreement
 	{
-		DiffieHellmanManaged dh;
+		//DiffieHellmanManaged dh;
 		DHPublicKey pubk;
 		
 		public override void Init (Key key)
 		{
-			DHPrivateKey pk = (DHPrivateKey) key;
-			dh = new DiffieHellmanManaged ();
-			dh.ImportParameters (pk.Parameters);
+            //DHPrivateKey pk = (DHPrivateKey) key;
+            //dh = new DiffieHellmanManaged ();
+            //dh.ImportParameters (pk.Parameters);
+
+            throw new NotImplementedException();
 		}
 		
 		
 		public override Key DoPhase (Key key, bool lastPhase)
 		{
-			pubk = (DHPublicKey) key;
-			return null;
+            //pubk = (DHPublicKey) key;
+            //return null;
+            throw new NotImplementedException();
 		}
 		
 		
 		public override byte[] GenerateSecret ()
 		{
-			return dh.DecryptKeyExchange (pubk.GetY ().GetBytes ());
+            //return dh.DecryptKeyExchange (pubk.GetY ().GetBytes ());
+            throw new NotImplementedException();
 		}
 	}
 }

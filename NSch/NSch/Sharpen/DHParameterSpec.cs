@@ -25,7 +25,7 @@
 // THE SOFTWARE.
 
 using System;
-using Mono.Math;
+using System.Numerics;
 
 namespace Sharpen
 {

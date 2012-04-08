@@ -604,10 +604,10 @@ namespace Sharpen
 			return val;
 		}
 
-		public static int GetTotalInFixed (this Inflater inf)
+		public static long GetTotalInFixed (this Inflater inf)
 		{
 			if (inf.TotalIn > 0)
-				return inf.TotalIn + 4;
+				return inf.TotalIn + (long) 4;
 			else
 				return 0;
 		}
